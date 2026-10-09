@@ -68,7 +68,7 @@ async def async_setup_entry(
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
-    api.subscribe()
+    await hass.async_add_executor_job(api.subscribe)
 
     def update_published():
         """Handle a push update."""
@@ -83,7 +83,7 @@ async def async_setup_entry(
     async def resubscribe(now):
         """Resubscribe to the MQTT updates."""
         await hass.async_add_executor_job(api.unsubscribe)
-        api.subscribe()
+        await hass.async_add_executor_job(api.subscribe)
 
         # Refresh values
         await asyncio.sleep(60)
